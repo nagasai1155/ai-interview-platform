@@ -37,11 +37,32 @@ public class AuthController {
         return ResponseEntity.ok(authService.refresh(req));
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<?> me(Authentication authentication) {
-        if (authentication == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        return ResponseEntity.ok(Map.of("email", authentication.getName()));
+     //testing
+    @GetMapping("/test")
+public ResponseEntity<?> test(Authentication authentication) {
+    if (authentication == null) {
+        return ResponseEntity.status(403).body("No authentication found");
     }
+    return ResponseEntity.ok(Map.of(
+        "email", authentication.getName(),
+        "authorities", authentication.getAuthorities().toString(),
+        "isAuthenticated", authentication.isAuthenticated()
+    ));
+}
+
+    @GetMapping("/me")
+public ResponseEntity<?> me(Authentication authentication) {
+    System.out.println("Auth: " + authentication); // debug log
+    
+    if (authentication == null || !authentication.isAuthenticated()) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "Not authenticated"));
+    }
+    return ResponseEntity.ok(Map.of(
+            "email", authentication.getName(),
+            "role", authentication.getAuthorities().toString()
+    ));
+}
+
+    
 }
