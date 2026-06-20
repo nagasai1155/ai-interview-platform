@@ -12,7 +12,7 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
 
     // get all resumes for a specific user
     List<Resume> findByUserId(Long userId);
-
+    
     // get one resume by id and user id
     // prevents user A from accessing user B's resume
     Optional<Resume> findByIdAndUserId(Long id, Long userId);
