@@ -1,8 +1,9 @@
 import "./globals.css";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "My App",
-  description: "My Application",
+export const metadata: Metadata = {
+  title: "InterviewAI",
+  description: "AI Powered Interview Preparation",
 };
 
 export default function RootLayout({
@@ -11,8 +12,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      {/* suppressHydrationWarning tells React to ignore
+          attributes added by browser extensions */}
+      <body suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }
