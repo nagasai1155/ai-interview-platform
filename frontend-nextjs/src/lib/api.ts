@@ -1,17 +1,11 @@
 import axios from "axios";
-import {
-  getAccessToken,
-  getRefreshToken,
-  saveTokens,
-  clearTokens,
-} from "./auth";
+import { getAccessToken, getRefreshToken, saveTokens, clearTokens } from "./auth";
 
 const api = axios.create({
-  baseURL: "http://localhost:8081/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081/api",
   headers: { "Content-Type": "application/json" },
 });
 
-// Attach access token to every request
 api.interceptors.request.use((config) => {
   const token = getAccessToken();
   if (token) {
@@ -20,7 +14,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Auto refresh token on 403
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -38,13 +31,12 @@ api.interceptors.response.use(
 
       try {
         const res = await axios.post(
-          "http://localhost:8081/api/auth/refresh",
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081/api"}/auth/refresh`,
           { refreshToken }
         );
-        const { accessToken, refreshToken: newRefreshToken } = res.data;
-        saveTokens(accessToken, newRefreshToken);
 
-        // Retry original request with new token
+        const { accessToken, refreshToken: newRefresh } = res.data;
+        saveTokens(accessToken, newRefresh);
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);
       } catch {

@@ -1,0 +1,19 @@
+# secrets — never push
+.env
+*.env
+application.properties
+application-local.properties
+
+# build folders — not needed
+backend/target/
+frontend-nextjs/node_modules/
+frontend-nextjs/.next/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
